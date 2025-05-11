@@ -1,10 +1,15 @@
-import { createProject } from "./project/project";
+import { addProject, addTodo, getProjects, getTodos } from "./models/storage";
 
-let project = createProject("test project");
+addProject("test project");
 
-console.log(project);
+console.log(getProjects());
 
-project.addTodo("test1", "descriotion of todo", "21/05/2025", "low");
-project.addTodo("test2", "description of todo", "22/05/2025", "low");
+let projectId = getProjects()[0].id;
 
-console.log(project);
+console.log(projectId);
+
+addTodo("test1", "descriotion of todo", "21/05/2025", "low", projectId);
+addTodo("test2", "description of todo", "22/05/2025", "low", projectId);
+
+console.log(getProjects());
+console.log(getTodos());
