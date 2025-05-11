@@ -70,3 +70,8 @@ export function getProjects() {
 export function getTodos() {
     return todos;
 }
+
+export function getTodosByProject(projectId) {
+    let filteredTodos = todos.filter(t => t.projectId === projectId)
+    return filteredTodos;
+}
