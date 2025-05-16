@@ -6,6 +6,7 @@ loadProjects();
 let todos = [];
 loadTodos();
 
+
 function loadProjects() {
     let savedProjects = JSON.parse(localStorage.getItem("projects") ?? '[]');
     console.log(`there are ${savedProjects.length} saved projects`)
@@ -61,6 +62,12 @@ export function addTodo(title, description, dueDate, priority, projectId) {
     else {
         console.log("Project does not exist to add todo to");
     }
+}
+
+export function deleteTodo(todoId) {
+    todos = todos.filter(todo => todo.id !== todoId)
+    console.log(todos);
+    localStorage.setItem("todos", JSON.stringify(todos));
 }
 
 export function getProjects() {

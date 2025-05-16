@@ -1,14 +1,18 @@
-import { getTodos, getTodosByProject } from "../models/storage";
+import { getTodos, getTodosByProject, deleteTodo } from "../models/storage";
 import { Element } from "../helpers/helpers";
 import { format, parseJSON } from "date-fns";
 
+let currentProject = '';
+
 export function displayTodos(projectId = 0) {
     let todos;
-    
+
     if (projectId == 0) {
+        currentProject = '';
         todos = getTodos();
     }
     else {
+        currentProject = projectId;
         todos = getTodosByProject(projectId);
     }
 
@@ -22,6 +26,8 @@ export function displayTodos(projectId = 0) {
     todos.forEach(todo => {
         todoTableBody.appendChild(generateTodoTableEntry(todo));
     });
+
+    addDeleteListeners();
 }
 
 
@@ -31,7 +37,7 @@ function generateEmptyTodoTable() {
     let tableHead = Element('thead', ['todoTableHeader']);
     let tableRow = Element('tr');
 
-    let columns = ['Title', 'Description', 'Due Date', 'Priority', 'Complete'];
+    let columns = ['Title', 'Description', 'Due Date', 'Priority', 'Complete', 'Delete'];
     columns.forEach(column => {
         tableRow.appendChild(Element('th', ['todoTableHeaderItem'], '', column));
     });
@@ -51,6 +57,18 @@ function generateTodoTableEntry(todo) {
     tableRow.appendChild(Element('td', ['todoItem'], '', format(todo.dueDate, 'PP')));
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.priority));
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.isComplete));
+    tableRow.appendChild(Element('td', ['todoItem', 'todoItemDelete'], todo.id, 'X'));
 
     return tableRow;
+}
+
+function addDeleteListeners() {
+    let deleteButtons = document.querySelectorAll('td.todoItemDelete');
+
+    deleteButtons.forEach(deleteButton => {
+        deleteButton.addEventListener('click', () => {
+            deleteTodo(deleteButton.id);
+            displayTodos(currentProject);
+        })
+    })
 }
