@@ -1,4 +1,4 @@
-import { getProjects } from "../models/storage";
+import { getProjects, addProject } from "../models/storage";
 import { Element } from "../helpers/helpers";
 import { displayTodos } from "./displayTodos";
 
@@ -15,7 +15,12 @@ export function displayProjects() {
         projectsContainer.appendChild(Element('div', ['projectItem'], project.id, project.title));
     });
 
+
+    projectsContainer.appendChild(Element('hr'));
+    projectsContainer.appendChild(Element('div', ['newProject'], 'newProject',"Add New Project"));
+
     addProjectListeners();
+    addNewProjectListener();
 }
 
 function addProjectListeners() {
@@ -25,5 +30,18 @@ function addProjectListeners() {
         project.addEventListener('click', () => {
             displayTodos(project.id);
         })
+    })
+}
+
+function addNewProjectListener() {
+    const newProjectButton = document.getElementById('newProject');
+
+    newProjectButton.addEventListener('click', () => {
+        let newProject = prompt("What is the new project name?");
+
+        if (newProject !== null) {
+            addProject(newProject);
+            displayProjects();
+        }
     })
 }
