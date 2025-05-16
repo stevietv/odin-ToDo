@@ -2,8 +2,16 @@ import { getTodos, getTodosByProject } from "../models/storage";
 import { Element } from "../helpers/helpers";
 import { format, parseJSON } from "date-fns";
 
-export function displayTodos() {
-    let allTodos = getTodos();
+export function displayTodos(projectId = 0) {
+    let todos;
+    
+    if (projectId == 0) {
+        todos = getTodos();
+    }
+    else {
+        todos = getTodosByProject(projectId);
+    }
+
     let todosContainer = document.getElementById("items");
     
     todosContainer.innerHTML = '';
@@ -11,21 +19,7 @@ export function displayTodos() {
 
     let todoTableBody = document.getElementsByClassName('todoTableBody')[0];
 
-    allTodos.forEach(todo => {
-        todoTableBody.appendChild(generateTodoTableEntry(todo));
-    });
-}
-
-export function showProjectTodos(projectId) {
-    let projectTodos = getTodosByProject(projectId);
-    let todosContainer = document.getElementById("items");
-
-    todosContainer.innerHTML = '';
-    todosContainer.appendChild(generateEmptyTodoTable());
-
-    let todoTableBody = document.getElementsByClassName('todoTableBody')[0];
-
-    projectTodos.forEach(todo => {
+    todos.forEach(todo => {
         todoTableBody.appendChild(generateTodoTableEntry(todo));
     });
 }

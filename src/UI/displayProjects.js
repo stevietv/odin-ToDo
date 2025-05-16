@@ -1,6 +1,6 @@
 import { getProjects } from "../models/storage";
 import { Element } from "../helpers/helpers";
-import { showProjectTodos } from "./displayTodos";
+import { displayTodos } from "./displayTodos";
 
 export function displayProjects() {
     let allProjects = getProjects();
@@ -20,7 +20,7 @@ function addProjectListeners() {
 
     projects.forEach(project => {
         project.addEventListener('click', () => {
-            showProjectTodos(project.id);
+            displayTodos(project.id);
         })
     })
 }
