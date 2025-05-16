@@ -1,10 +1,11 @@
-import { getTodos } from "../models/storage";
+import { getTodos, getTodosByProject } from "../models/storage";
 import { Element } from "../helpers/helpers";
 import { format, parseJSON } from "date-fns";
 
 export function displayTodos() {
     let allTodos = getTodos();
     let todosContainer = document.getElementById("items");
+    
     todosContainer.innerHTML = '';
     todosContainer.appendChild(generateEmptyTodoTable());
 
@@ -14,6 +15,21 @@ export function displayTodos() {
         todoTableBody.appendChild(generateTodoTableEntry(todo));
     });
 }
+
+export function showProjectTodos(projectId) {
+    let projectTodos = getTodosByProject(projectId);
+    let todosContainer = document.getElementById("items");
+
+    todosContainer.innerHTML = '';
+    todosContainer.appendChild(generateEmptyTodoTable());
+
+    let todoTableBody = document.getElementsByClassName('todoTableBody')[0];
+
+    projectTodos.forEach(todo => {
+        todoTableBody.appendChild(generateTodoTableEntry(todo));
+    });
+}
+
 
 function generateEmptyTodoTable() {
     let table = Element('table', ['todoTable']);
@@ -38,7 +54,7 @@ function generateTodoTableEntry(todo) {
     
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.title));
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.description));
-    tableRow.appendChild(Element('td', ['todoItem'], '', format(todo.dueDate, 'P')));
+    tableRow.appendChild(Element('td', ['todoItem'], '', format(todo.dueDate, 'PP')));
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.priority));
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.isComplete));
 
