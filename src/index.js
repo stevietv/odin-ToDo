@@ -13,8 +13,8 @@ console.log(getProjects());
 console.log(getTodos());
 
 addProject("test2");
-addTodo("new", "new2", new Date(), "high", "f01c19e7-5a08-46c6-aec7-d5f4f5f39394");
-console.log(getTodosByProject("f01c19e7-5a08-46c6-aec7-d5f4f5f39394"));
+addTodo("new", "new2", new Date(), "high", "de019bea-65b7-4614-a0d1-e904ee954074");
+console.log(getTodosByProject("de019bea-65b7-4614-a0d1-e904ee954074"));
 
 displayProjects();
 displayTodos();

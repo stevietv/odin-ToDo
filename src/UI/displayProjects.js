@@ -7,6 +7,9 @@ export function displayProjects() {
     let projectsContainer = document.getElementById("projects");
     projectsContainer.innerHTML = "";
 
+    projectsContainer.appendChild(Element('div', ['projectItem', 'projectItemAll'], 0, 'All Projects'));
+    projectsContainer.appendChild(Element('hr'));
+
 
     allProjects.forEach(project => {
         projectsContainer.appendChild(Element('div', ['projectItem'], project.id, project.title));
