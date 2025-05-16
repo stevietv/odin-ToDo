@@ -1,4 +1,4 @@
-import { getTodos, getTodosByProject, deleteTodo } from "../models/storage";
+import { getTodos, getTodosByProject, deleteTodo, getTodoById } from "../models/storage";
 import { Element } from "../helpers/helpers";
 import { format, parseJSON } from "date-fns";
 
@@ -67,8 +67,12 @@ function addDeleteListeners() {
 
     deleteButtons.forEach(deleteButton => {
         deleteButton.addEventListener('click', () => {
-            deleteTodo(deleteButton.id);
-            displayTodos(currentProject);
+            let todo = getTodoById(deleteButton.id);
+
+            if (confirm(`Do you want to delete ${todo.title}`)) {
+                deleteTodo(deleteButton.id);
+                displayTodos(currentProject);
+            }
         })
     })
 }

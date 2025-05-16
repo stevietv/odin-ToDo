@@ -82,3 +82,7 @@ export function getTodosByProject(projectId) {
     let filteredTodos = todos.filter(t => t.projectId === projectId)
     return filteredTodos;
 }
+
+export function getTodoById(todoId) {
+    return todos.find(todo => todo.id === todoId);
+}
