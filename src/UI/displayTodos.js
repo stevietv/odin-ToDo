@@ -28,6 +28,13 @@ export function displayTodos(projectId = 0) {
     });
 
     addDeleteListeners();
+
+    if (projectId != 0) {
+        let todoTableFoot = Element('tfoot', ['todoTableFooter']);
+        todoTableBody.parentNode.appendChild(todoTableFoot);
+        todoTableFoot.appendChild(generateNewTodoRow());
+    }
+
 }
 
 
@@ -58,6 +65,21 @@ function generateTodoTableEntry(todo) {
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.priority));
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.isComplete));
     tableRow.appendChild(Element('td', ['todoItem', 'todoItemDelete'], todo.id, 'X'));
+
+    return tableRow;
+}
+
+function generateNewTodoRow() {
+
+    //TODO: convert this to a form
+    let tableRow = Element('tr');
+    
+    tableRow.appendChild(Element('td', ['newTodoItem'], '', "NewTitle"));
+    tableRow.appendChild(Element('td', ['newTodoItem'], '', "NewDecription"));
+    tableRow.appendChild(Element('td', ['newTodoItem'], '', "NewDate"));
+    tableRow.appendChild(Element('td', ['newTodoItem'], '', "NewPriority"));
+    tableRow.appendChild(Element('td', ['newTodoItem'], '', ''));
+    tableRow.appendChild(Element('td', ['newTodoItem', 'todoItemAdd'], '', '+'));
 
     return tableRow;
 }
