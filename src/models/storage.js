@@ -1,5 +1,5 @@
-import { Project, createProject } from "./project";
-import { Todo, createTodo } from "./todo";
+import { createProject, Project } from "./project";
+import { createTodo, Todo } from "./todo";
 
 let projects = [];
 loadProjects();
@@ -40,7 +40,7 @@ function loadTodos() {
             "Default Todo", 
             "This is an example Todo",
             nextWeek,
-            "low",
+            "Low",
             projects[0].id
         );
     }
@@ -70,6 +70,15 @@ export function deleteTodo(todoId) {
     localStorage.setItem("todos", JSON.stringify(todos));
 }
 
+export function toggleTodoComplete(updatedTodo) {
+    let index = todos.findIndex(todo => todo.id === updatedTodo.id);
+    updatedTodo.toggleComplete();
+    if (index !== -1 ) {
+         todos.splice(index, 1, updatedTodo);
+         localStorage.setItem("todos", JSON.stringify(todos))
+     }
+}
+
 export function getProjects() {
     return projects;
 }
@@ -79,8 +88,7 @@ export function getTodos() {
 }
 
 export function getTodosByProject(projectId) {
-    let filteredTodos = todos.filter(t => t.projectId === projectId)
-    return filteredTodos;
+    return todos.filter(t => t.projectId === projectId);
 }
 
 export function getTodoById(todoId) {

@@ -1,4 +1,4 @@
-import { getTodos, getTodosByProject, deleteTodo, getTodoById, addTodo } from "../models/storage";
+import { getTodos, getTodosByProject, deleteTodo, getTodoById, addTodo, toggleTodoComplete } from "../models/storage";
 import { Element } from "../helpers/helpers";
 import { format } from "date-fns";
 
@@ -58,13 +58,24 @@ function generateEmptyTodoTable() {
 }
 
 function generateTodoTableEntry(todo) {
+    let isCompleteCheckbox = Element('input', ['todoIsComplete'], todo.id);
+    isCompleteCheckbox.type = 'checkbox';
+    isCompleteCheckbox.checked = todo.isComplete;
+
+    let isCompleteField = Element('td', ['todoItem']);
+    isCompleteField.appendChild(isCompleteCheckbox);
+
+    isCompleteCheckbox.addEventListener('change', () => {
+        toggleTodoComplete(todo);
+    })
+
     let tableRow = Element('tr');
     
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.title));
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.description));
     tableRow.appendChild(Element('td', ['todoItem'], '', format(todo.dueDate, 'PP')));
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.priority));
-    tableRow.appendChild(Element('td', ['todoItem'], '', todo.isComplete));
+    tableRow.appendChild(isCompleteField);
     tableRow.appendChild(Element('td', ['todoItem', 'todoItemDelete'], todo.id, 'X'));
 
     return tableRow;
