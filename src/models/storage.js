@@ -57,6 +57,7 @@ export function addTodo(title, description, dueDate, priority, projectId) {
     console.log(`Adding todo to project ${projectId}`)
     if (projects.some(p => p.getProject().id === projectId)) {
         todos.push(createTodo(title, description, dueDate, priority, projectId));
+        todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
         localStorage.setItem("todos", JSON.stringify(todos))
     }
     else {
