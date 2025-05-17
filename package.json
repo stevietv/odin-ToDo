@@ -1,7 +1,7 @@
 {
-  "name": "restaurant-webpack-page",
+  "name": "todolist-webpack-page",
   "version": "0.0.1",
-  "description": "A restaurant page using js to practice webpack",
+  "description": "A todo list page using js",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack serve --open --config webpack.dev.js",

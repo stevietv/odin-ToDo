@@ -1,13 +1,13 @@
-import { getTodos, getTodosByProject, deleteTodo, getTodoById } from "../models/storage";
+import { getTodos, getTodosByProject, deleteTodo, getTodoById, addTodo } from "../models/storage";
 import { Element } from "../helpers/helpers";
-import { format, parseJSON } from "date-fns";
+import { format } from "date-fns";
 
 let currentProject = '';
 
-export function displayTodos(projectId = 0) {
+export function displayTodos(projectId = '') {
     let todos;
 
-    if (projectId == 0) {
+    if (projectId === '') {
         currentProject = '';
         todos = getTodos();
     }
@@ -29,10 +29,11 @@ export function displayTodos(projectId = 0) {
 
     addDeleteListeners();
 
-    if (projectId != 0) {
+    if (projectId !== '') {
         let todoTableFoot = Element('tfoot', ['todoTableFooter']);
         todoTableBody.parentNode.appendChild(todoTableFoot);
         todoTableFoot.appendChild(generateNewTodoRow());
+        addNewTodoListener();
     }
 
 }
@@ -70,14 +71,38 @@ function generateTodoTableEntry(todo) {
 }
 
 function generateNewTodoRow() {
+    let titleField = Element('td',['newTodoItem']);
+    let titleInput = Element('input', ['newTitle'], 'newTitle');
+    titleInput.placeholder = 'New Title';
+    titleField.append(titleInput);
 
-    //TODO: convert this to a form
+    let descriptionField = Element('td', ['newTodoItem']);
+    let descriptionInput = Element('input', ['newDescription'], 'newDescription');
+    descriptionInput.placeholder = 'Description';
+    descriptionField.append(descriptionInput);
+
+    let dateField = Element('td', ['newDate']);
+    let dateInput = Element('input', ['newDate'], 'newDate');
+    dateInput.type = 'date';
+    dateField.append(dateInput);
+
+    let priorityField = Element('td', ['newPriority']);
+    let priorityInput = Element('select', ['newPriority'], 'newPriority');
+    let priorityOptions = ['Low', 'Medium', 'High'];
+    priorityOptions.forEach(priority => {
+        let option = document.createElement('option');
+        option.value = priority;
+        option.textContent = priority;
+        priorityInput.append(option);
+    });
+    priorityField.append(priorityInput);
+
     let tableRow = Element('tr');
     
-    tableRow.appendChild(Element('td', ['newTodoItem'], '', "NewTitle"));
-    tableRow.appendChild(Element('td', ['newTodoItem'], '', "NewDecription"));
-    tableRow.appendChild(Element('td', ['newTodoItem'], '', "NewDate"));
-    tableRow.appendChild(Element('td', ['newTodoItem'], '', "NewPriority"));
+    tableRow.appendChild(titleField);
+    tableRow.appendChild(descriptionField);
+    tableRow.appendChild(dateField);
+    tableRow.appendChild(priorityField);
     tableRow.appendChild(Element('td', ['newTodoItem'], '', ''));
     tableRow.appendChild(Element('td', ['newTodoItem', 'todoItemAdd'], '', '+'));
 
@@ -96,5 +121,24 @@ function addDeleteListeners() {
                 displayTodos(currentProject);
             }
         })
+    })
+}
+
+function addNewTodoListener() {
+    let addButton = document.querySelector('td.todoItemAdd');
+
+    addButton.addEventListener('click', () => {
+        let title = document.getElementById('newTitle').value;
+        let description = document.getElementById('newDescription').value;
+        let date = document.getElementById('newDate').value;
+        if (date !== null && date !== '') {
+            date = new Date(date);
+        }
+        let priority = document.getElementById('newPriority').value;
+
+        if (title !== '' && date !== '') {
+            addTodo(title, description, date, priority, currentProject);
+            displayTodos(currentProject);
+        }
     })
 }
