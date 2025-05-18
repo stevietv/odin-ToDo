@@ -47,7 +47,8 @@ function generateEmptyTodoTable() {
 
     let columns = ['Title', 'Description', 'Due Date', 'Priority', 'Complete', 'Delete'];
     columns.forEach(column => {
-        tableRow.appendChild(Element('th', ['todoTableHeaderItem'], '', column));
+        console.log(column !== 'Title');
+        tableRow.appendChild(Element('th', (column !== 'Title' && column !== 'Description') ? ['todoTableHeaderItem', 'center'] : ['todoTableHeaderItem', 'left'], `th-${column}`, column));
     });
 
     tableHead.appendChild(tableRow);
@@ -62,7 +63,7 @@ function generateTodoTableEntry(todo) {
     isCompleteCheckbox.type = 'checkbox';
     isCompleteCheckbox.checked = todo.isComplete;
 
-    let isCompleteField = Element('td', ['todoItem']);
+    let isCompleteField = Element('td', ['todoItem', 'center']);
     isCompleteField.appendChild(isCompleteCheckbox);
 
     isCompleteCheckbox.addEventListener('change', () => {
@@ -74,10 +75,10 @@ function generateTodoTableEntry(todo) {
     
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.title));
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.description));
-    tableRow.appendChild(Element('td', ['todoItem'], '', format(todo.dueDate, 'PP')));
-    tableRow.appendChild(Element('td', ['todoItem'], '', todo.priority));
+    tableRow.appendChild(Element('td', ['todoItem', 'center'], '', format(todo.dueDate, 'PP')));
+    tableRow.appendChild(Element('td', ['todoItem', 'center'], '', todo.priority));
     tableRow.appendChild(isCompleteField);
-    tableRow.appendChild(Element('td', ['todoItem', 'todoItemDelete'], todo.id, 'X'));
+    tableRow.appendChild(Element('td', ['todoItem', 'todoItemDelete', 'center'], todo.id, 'X'));
 
     if (!todo.isComplete && isPast(todo.dueDate)) {
         tableRow.classList.add('overdue');

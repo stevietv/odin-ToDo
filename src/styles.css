@@ -1,23 +1,39 @@
 .mainContainer {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: auto 1fr;
   grid-template-rows: 100px 1fr;
   grid-column-gap: 0;
   grid-row-gap: 0;
+  margin: 0 5em;
 }
 
 .header {
   grid-area: 1 / 1 / 2 / 3;
+  justify-self: center;
 }
 
 .projects {
   grid-area: 2 / 1 / 3 / 2;
+  margin: 10px;
 }
 
 .items {
   grid-area: 2 / 2 / 3 / 3;
+  margin: 10px;
 }
 
+.todoTable {
+  width: 100%;
+  height: 100%;
+}
+
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
 .overdue {
   color: red;
 }
