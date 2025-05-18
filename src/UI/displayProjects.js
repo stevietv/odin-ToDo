@@ -10,11 +10,9 @@ export function displayProjects() {
     projectsContainer.appendChild(Element('div', ['projectItem', 'projectItemAll'], '', 'All Projects'));
     projectsContainer.appendChild(Element('hr'));
 
-
     allProjects.forEach(project => {
         projectsContainer.appendChild(Element('div', ['projectItem'], project.id, project.title));
     });
-
 
     projectsContainer.appendChild(Element('hr'));
     projectsContainer.appendChild(Element('div', ['newProject'], 'newProject',"Add New Project"));
