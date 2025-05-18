@@ -49,7 +49,7 @@ function loadTodos() {
 export function addProject(title) {
     if (!projects.some(p => p.getProject().title === title)) {
         projects.push(createProject(title));
-        localStorage.setItem("projects", JSON.stringify(projects))
+        saveToLocalStorage();
     }
 }
 
@@ -58,7 +58,7 @@ export function addTodo(title, description, dueDate, priority, projectId) {
     if (projects.some(p => p.getProject().id === projectId)) {
         todos.push(createTodo(title, description, dueDate, priority, projectId));
         todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-        localStorage.setItem("todos", JSON.stringify(todos))
+        saveToLocalStorage();
     }
     else {
         console.log("Project does not exist to add todo to");
@@ -67,8 +67,7 @@ export function addTodo(title, description, dueDate, priority, projectId) {
 
 export function deleteTodo(todoId) {
     todos = todos.filter(todo => todo.id !== todoId)
-    console.log(todos);
-    localStorage.setItem("todos", JSON.stringify(todos));
+    saveToLocalStorage();
 }
 
 export function toggleTodoComplete(updatedTodo) {
@@ -76,7 +75,7 @@ export function toggleTodoComplete(updatedTodo) {
     updatedTodo.toggleComplete();
     if (index !== -1 ) {
          todos.splice(index, 1, updatedTodo);
-         localStorage.setItem("todos", JSON.stringify(todos))
+         saveToLocalStorage();
      }
 }
 
@@ -94,4 +93,9 @@ export function getTodosByProject(projectId) {
 
 export function getTodoById(todoId) {
     return todos.find(todo => todo.id === todoId);
+}
+
+function saveToLocalStorage() {
+    localStorage.setItem("todos", JSON.stringify(todos));
+    localStorage.setItem("projects", JSON.stringify(projects));
 }
