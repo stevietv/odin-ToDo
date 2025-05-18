@@ -1,6 +1,6 @@
 import { getTodos, getTodosByProject, deleteTodo, getTodoById, addTodo, toggleTodoComplete } from "../models/storage";
 import { Element } from "../helpers/helpers";
-import { format } from "date-fns";
+import { format, isPast } from "date-fns";
 
 let currentProject = '';
 
@@ -67,6 +67,7 @@ function generateTodoTableEntry(todo) {
 
     isCompleteCheckbox.addEventListener('change', () => {
         toggleTodoComplete(todo);
+        displayTodos(currentProject);
     })
 
     let tableRow = Element('tr');
@@ -77,6 +78,10 @@ function generateTodoTableEntry(todo) {
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.priority));
     tableRow.appendChild(isCompleteField);
     tableRow.appendChild(Element('td', ['todoItem', 'todoItemDelete'], todo.id, 'X'));
+
+    if (!todo.isComplete && isPast(todo.dueDate)) {
+        tableRow.classList.add('overdue');
+    }
 
     return tableRow;
 }
