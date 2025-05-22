@@ -53,6 +53,12 @@ export function addProject(title) {
     }
 }
 
+export function deleteProject(projectId) {
+    projects = projects.filter(project => project.getProject().id !== projectId);
+    todos = todos.filter(todo => todo.projectId !== projectId);
+    saveToLocalStorage();
+}
+
 export function addTodo(title, description, dueDate, priority, projectId) {
     console.log(`Adding todo to project ${projectId}`)
     if (projects.some(p => p.getProject().id === projectId)) {
@@ -81,6 +87,10 @@ export function toggleTodoComplete(updatedTodo) {
 
 export function getProjects() {
     return projects;
+}
+
+export function getProjectById(projectId) {
+    return projects.find(project => project.id === projectId);
 }
 
 export function getTodos() {

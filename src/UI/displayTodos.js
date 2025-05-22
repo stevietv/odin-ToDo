@@ -1,6 +1,7 @@
-import { getTodos, getTodosByProject, deleteTodo, addTodo, toggleTodoComplete } from "../models/storage";
+import { getTodos, getTodosByProject, deleteTodo, addTodo, toggleTodoComplete, deleteProject, getProjectById } from "../models/storage";
 import { Element } from "../helpers/helpers";
 import { format, isPast } from "date-fns";
+import { displayProjects } from './displayProjects';
 
 let currentProject = '';
 let showCompleted = false;
@@ -13,7 +14,9 @@ export function displayTodos(projectId = '') {
 
     let controlButtonsContainer = Element('div', ['controlButtonsContainer']);
     todosContainer.appendChild(controlButtonsContainer);
+
     controlButtonsContainer.appendChild(generateToggleCompletedButton());
+    if (currentProject !== '') controlButtonsContainer.appendChild(generateDeleteProjectButton());
 
     let todosTableContainer = Element('div', ['todosTableContainer']);
     todosContainer.appendChild(todosTableContainer);
@@ -152,6 +155,20 @@ function generateToggleCompletedButton() {
         showCompleted = !showCompleted;
         button.innerHTML = showCompleted ? 'Hide Completed' : 'Show Completed';
         displayTodos(currentProject);
+    })
+    return button;
+}
+
+function generateDeleteProjectButton() {
+    let button = Element('button',['deleteProject'], 'deleteProject');
+    button.innerHTML = 'Delete Project';
+    button.addEventListener('click', () => {
+        let projectTitle = getProjectById(currentProject).title;
+        if (confirm(`Do you want to delete the project '${projectTitle}' and all associated todos?`)) {
+            deleteProject(currentProject);
+            displayTodos();
+            displayProjects();
+        }
     })
     return button;
 }

@@ -24,7 +24,8 @@
 
 .controlButtonsContainer {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
 }
 
 .todoTable {
