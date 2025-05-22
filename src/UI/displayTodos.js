@@ -1,4 +1,4 @@
-import { getTodos, getTodosByProject, deleteTodo, getTodoById, addTodo, toggleTodoComplete } from "../models/storage";
+import { getTodos, getTodosByProject, deleteTodo, addTodo, toggleTodoComplete } from "../models/storage";
 import { Element } from "../helpers/helpers";
 import { format, isPast } from "date-fns";
 
@@ -18,16 +18,13 @@ export function displayTodos(projectId = '') {
     let todosTableContainer = Element('div', ['todosTableContainer']);
     todosContainer.appendChild(todosTableContainer);
 
-    let todosTable = generateEmptyTodoTable();
-    todosTableContainer.appendChild(todosTable);
+    todosTableContainer.appendChild(generateEmptyTodoTable());
 
     let todoTableBody = document.getElementsByClassName('todoTableBody')[0];
 
     todos.forEach(todo => {
         todoTableBody.appendChild(generateTodoTableEntry(todo));
     });
-
-    addDeleteListeners();
 
     if (projectId !== '') {
         let todoTableFoot = Element('tfoot', ['todoTableFooter']);
@@ -84,6 +81,15 @@ function generateTodoTableEntry(todo) {
         displayTodos(currentProject);
     })
 
+    let deleteButton = Element('td', ['todoItem', 'todoItemDelete', 'center'], todo.id, 'X')
+
+    deleteButton.addEventListener('click', () => {
+        if (confirm(`Do you want to delete ${todo.title}`)) {
+            deleteTodo(todo.id);
+            displayTodos(currentProject);
+        }
+    })
+
     let tableRow = Element('tr');
     
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.title));
@@ -91,7 +97,7 @@ function generateTodoTableEntry(todo) {
     tableRow.appendChild(Element('td', ['todoItem', 'center'], '', format(todo.dueDate, 'PP')));
     tableRow.appendChild(Element('td', ['todoItem', 'center'], '', todo.priority));
     tableRow.appendChild(isCompleteField);
-    tableRow.appendChild(Element('td', ['todoItem', 'todoItemDelete', 'center'], todo.id, 'X'));
+    tableRow.appendChild(deleteButton);
 
     if (!todo.isComplete && isPast(todo.dueDate)) {
         tableRow.classList.add('overdue');
@@ -150,20 +156,6 @@ function generateToggleCompletedButton() {
     return button;
 }
 
-function addDeleteListeners() {
-    let deleteButtons = document.querySelectorAll('td.todoItemDelete');
-
-    deleteButtons.forEach(deleteButton => {
-        deleteButton.addEventListener('click', () => {
-            let todo = getTodoById(deleteButton.id);
-
-            if (confirm(`Do you want to delete ${todo.title}`)) {
-                deleteTodo(deleteButton.id);
-                displayTodos(currentProject);
-            }
-        })
-    })
-}
 
 function addNewTodoListener() {
     let addButton = document.querySelector('td.todoItemAdd');
