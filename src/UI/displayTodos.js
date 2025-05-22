@@ -120,12 +120,13 @@ function generateNewTodoRow() {
     descriptionInput.placeholder = 'Description';
     descriptionField.append(descriptionInput);
 
-    let dateField = Element('td', ['newDate']);
+    let dateField = Element('td', ['newDate', 'center']);
     let dateInput = Element('input', ['newDate'], 'newDate');
     dateInput.type = 'date';
+    dateInput.value = format(new Date(),'yyyy-mm-dd');
     dateField.append(dateInput);
 
-    let priorityField = Element('td', ['newPriority']);
+    let priorityField = Element('td', ['newPriority', 'center']);
     let priorityInput = Element('select', ['newPriority'], 'newPriority');
     let priorityOptions = ['Low', 'Medium', 'High'];
     priorityOptions.forEach(priority => {
@@ -142,8 +143,8 @@ function generateNewTodoRow() {
     tableRow.appendChild(descriptionField);
     tableRow.appendChild(dateField);
     tableRow.appendChild(priorityField);
-    tableRow.appendChild(Element('td', ['newTodoItem'], '', ''));
-    tableRow.appendChild(Element('td', ['newTodoItem', 'todoItemAdd'], '', '+'));
+    tableRow.appendChild(Element('td', ['newTodoItem', 'center'], '', ''));
+    tableRow.appendChild(Element('td', ['newTodoItem', 'todoItemAdd', 'center'], '', '+'));
 
     return tableRow;
 }
