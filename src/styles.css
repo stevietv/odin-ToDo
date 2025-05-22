@@ -22,6 +22,11 @@
   margin: 10px;
 }
 
+.controlButtonsContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .todoTable {
   width: 100%;
   height: 100%;

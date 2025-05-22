@@ -3,23 +3,23 @@ import { Element } from "../helpers/helpers";
 import { format, isPast } from "date-fns";
 
 let currentProject = '';
+let showCompleted = false;
 
 export function displayTodos(projectId = '') {
-    let todos;
+    let todos = getTodosToDisplay(projectId);
 
-    if (projectId === '') {
-        currentProject = '';
-        todos = getTodos();
-    }
-    else {
-        currentProject = projectId;
-        todos = getTodosByProject(projectId);
-    }
-
-    let todosContainer = document.getElementById("items");
-    
+    let todosContainer = document.getElementById('items');
     todosContainer.innerHTML = '';
-    todosContainer.appendChild(generateEmptyTodoTable());
+
+    let controlButtonsContainer = Element('div', ['controlButtonsContainer']);
+    todosContainer.appendChild(controlButtonsContainer);
+    controlButtonsContainer.appendChild(generateToggleCompletedButton());
+
+    let todosTableContainer = Element('div', ['todosTableContainer']);
+    todosContainer.appendChild(todosTableContainer);
+
+    let todosTable = generateEmptyTodoTable();
+    todosTableContainer.appendChild(todosTable);
 
     let todoTableBody = document.getElementsByClassName('todoTableBody')[0];
 
@@ -35,9 +35,23 @@ export function displayTodos(projectId = '') {
         todoTableFoot.appendChild(generateNewTodoRow());
         addNewTodoListener();
     }
-
 }
 
+function getTodosToDisplay(projectId) {
+    let todos;
+    if (projectId === '') {
+        currentProject = '';
+        todos = getTodos();
+    }
+    else {
+        currentProject = projectId;
+        todos = getTodosByProject(projectId);
+    }
+    if (!showCompleted) {
+        return todos.filter(todos => todos.isComplete === showCompleted);
+    }
+    else return todos;
+}
 
 function generateEmptyTodoTable() {
     let table = Element('table', ['todoTable']);
@@ -47,7 +61,6 @@ function generateEmptyTodoTable() {
 
     let columns = ['Title', 'Description', 'Due Date', 'Priority', 'Complete', 'Delete'];
     columns.forEach(column => {
-        console.log(column !== 'Title');
         tableRow.appendChild(Element('th', (column !== 'Title' && column !== 'Description') ? ['todoTableHeaderItem', 'center'] : ['todoTableHeaderItem', 'left'], `th-${column}`, column));
     });
 
@@ -124,6 +137,17 @@ function generateNewTodoRow() {
     tableRow.appendChild(Element('td', ['newTodoItem', 'todoItemAdd'], '', '+'));
 
     return tableRow;
+}
+
+function generateToggleCompletedButton() {
+    let button = Element('button',['toggleCompleted'], 'toggleCompleted');
+    button.innerHTML = showCompleted ? 'Hide Completed' : 'Show Completed';
+    button.addEventListener('click', () => {
+        showCompleted = !showCompleted;
+        button.innerHTML = showCompleted ? 'Hide Completed' : 'Show Completed';
+        displayTodos(currentProject);
+    })
+    return button;
 }
 
 function addDeleteListeners() {
