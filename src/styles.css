@@ -33,6 +33,12 @@
   height: 100%;
 }
 
+.todoItemActions {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+}
+
 .center {
   text-align: center;
 }

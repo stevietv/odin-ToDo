@@ -14,7 +14,7 @@ export function generateBaseTodosLayout() {
     todosContainer.appendChild(controlButtonsContainer);
 
     controlButtonsContainer.appendChild(generateToggleCompletedButton());
-    if (currentProject !== '') controlButtonsContainer.appendChild(generateDeleteProjectButton());
+    controlButtonsContainer.appendChild(generateDeleteProjectButton());
 
     let todosTableContainer = Element('div', ['todosTableContainer']);
     todosContainer.appendChild(todosTableContainer);
@@ -39,6 +39,11 @@ export function displayTodos(projectId = '') {
         todoTableFoot.appendChild(generateNewTodoRow());
         addNewTodoListener();
     }
+
+    let deleteProjectButton = document.getElementById('deleteProject');
+
+    deleteProjectButton.disabled = (projectId === '');
+
 }
 
 function getTodosToDisplay(projectId) {
@@ -63,7 +68,7 @@ function generateEmptyTodoTable() {
     let tableHead = Element('thead', ['todoTableHeader']);
     let tableRow = Element('tr');
 
-    let columns = ['Title', 'Description', 'Due Date', 'Priority', 'Complete', 'Delete'];
+    let columns = ['Title', 'Description', 'Due Date', 'Priority', 'Complete', 'Actions'];
     columns.forEach(column => {
         tableRow.appendChild(Element('th', (column !== 'Title' && column !== 'Description') ? ['todoTableHeaderItem', 'center'] : ['todoTableHeaderItem', 'left'], `th-${column}`, column));
     });
@@ -89,7 +94,9 @@ function generateTodoTableEntry(todo) {
         displayTodos(currentProject);
     })
 
-    let deleteButton = Element('td', ['todoItem', 'todoItemDelete', 'center'], todo.id, 'X')
+    let actionsCell = Element('td', ['todoItem', 'todoItemActions', 'center']);
+
+    let deleteButton = Element('div', ['todoItemDelete', 'center'], '', 'X')
 
     deleteButton.addEventListener('click', () => {
         if (confirm(`Do you want to delete ${todo.title}`)) {
@@ -98,6 +105,11 @@ function generateTodoTableEntry(todo) {
         }
     })
 
+    let editButton = Element('div', ['todoItemEdit', 'center'], '', 'E');
+
+    actionsCell.appendChild(editButton);
+    actionsCell.appendChild(deleteButton);
+
     let tableRow = Element('tr');
     
     tableRow.appendChild(Element('td', ['todoItem'], '', todo.title));
@@ -105,7 +117,7 @@ function generateTodoTableEntry(todo) {
     tableRow.appendChild(Element('td', ['todoItem', 'center'], '', format(todo.dueDate, 'PP')));
     tableRow.appendChild(Element('td', ['todoItem', 'center'], '', todo.priority));
     tableRow.appendChild(isCompleteField);
-    tableRow.appendChild(deleteButton);
+    tableRow.appendChild(actionsCell);
 
     if (!todo.isComplete && isPast(todo.dueDate)) {
         tableRow.classList.add('overdue');
