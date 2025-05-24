@@ -1,6 +1,7 @@
 import { displayProjects } from "./UI/displayProjects";
 import './styles.css';
-import { displayTodos } from "./UI/displayTodos";
+import { displayTodos, generateBaseTodosLayout } from "./UI/displayTodos";
 
+generateBaseTodosLayout();
 displayProjects();
 displayTodos();

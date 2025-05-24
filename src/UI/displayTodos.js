@@ -6,9 +6,7 @@ import { displayProjects } from './displayProjects';
 let currentProject = '';
 let showCompleted = false;
 
-export function displayTodos(projectId = '') {
-    let todos = getTodosToDisplay(projectId);
-
+export function generateBaseTodosLayout() {
     let todosContainer = document.getElementById('items');
     todosContainer.innerHTML = '';
 
@@ -22,16 +20,22 @@ export function displayTodos(projectId = '') {
     todosContainer.appendChild(todosTableContainer);
 
     todosTableContainer.appendChild(generateEmptyTodoTable());
+}
 
-    let todoTableBody = document.getElementsByClassName('todoTableBody')[0];
+export function displayTodos(projectId = '') {
+    let todos = getTodosToDisplay(projectId);
+
+    let todoTableBody = document.getElementById('todoTableBody');
+    todoTableBody.innerHTML = '';
 
     todos.forEach(todo => {
         todoTableBody.appendChild(generateTodoTableEntry(todo));
     });
 
+    let todoTableFoot = document.getElementById('todoTableFooter');
+    todoTableFoot.innerHTML = '';
+
     if (projectId !== '') {
-        let todoTableFoot = Element('tfoot', ['todoTableFooter']);
-        todoTableBody.parentNode.appendChild(todoTableFoot);
         todoTableFoot.appendChild(generateNewTodoRow());
         addNewTodoListener();
     }
@@ -67,7 +71,8 @@ function generateEmptyTodoTable() {
     tableHead.appendChild(tableRow);
     table.appendChild(tableHead);
         
-    table.appendChild(Element('tbody', ['todoTableBody']));
+    table.appendChild(Element('tbody', ['todoTableBody'], 'todoTableBody'));
+    table.appendChild(Element('tfoot', ['todoTableFooter'], 'todoTableFooter'));
     return table;
 }
 
@@ -123,7 +128,7 @@ function generateNewTodoRow() {
     let dateField = Element('td', ['newDate', 'center']);
     let dateInput = Element('input', ['newDate'], 'newDate');
     dateInput.type = 'date';
-    dateInput.value = format(new Date(),'yyyy-mm-dd');
+    dateInput.value = format(new Date(),'yyyy-MM-dd');
     dateField.append(dateInput);
 
     let priorityField = Element('td', ['newPriority', 'center']);
