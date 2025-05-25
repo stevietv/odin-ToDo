@@ -9,7 +9,6 @@ loadTodos();
 
 function loadProjects() {
     let savedProjects = JSON.parse(localStorage.getItem("projects") ?? '[]');
-    console.log(`there are ${savedProjects.length} saved projects`)
     if (savedProjects.length > 0)
         projects = savedProjects.map(p => new Project(p.id, p.title));
     else {
@@ -19,7 +18,7 @@ function loadProjects() {
 
 function loadTodos() {
     let savedTodos = JSON.parse(localStorage.getItem("todos") ?? "[]");
-    console.log(`there are ${savedTodos.length} saved todos`)
+
     if (savedTodos.length > 0) {
         todos = savedTodos.map(t => {
             const todo = new Todo(
@@ -113,10 +112,6 @@ export function getTodos() {
 
 export function getTodosByProject(projectId) {
     return todos.filter(t => t.projectId === projectId);
-}
-
-export function getTodoById(todoId) {
-    return todos.find(todo => todo.id === todoId);
 }
 
 function saveToLocalStorage() {

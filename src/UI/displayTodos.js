@@ -7,7 +7,7 @@ import { generateAddTodoModal } from './addTodoModal';
 let currentProject = '';
 let showCompleted = false;
 
-export function generateBaseTodosLayout() {
+export function createBaseTodosLayout() {
     let todosContainer = document.getElementById('items');
     todosContainer.innerHTML = '';
 
@@ -19,15 +19,15 @@ export function generateBaseTodosLayout() {
     controlButtonsContainer.appendChild(controlButtonsLeft);
     controlButtonsContainer.appendChild(controlButtonsRight);
 
-    controlButtonsContainer.appendChild(generateAddTodoButton());
+    controlButtonsContainer.appendChild(createAddTodoButton());
 
-    controlButtonsRight.appendChild(generateToggleCompletedButton());
-    controlButtonsRight.appendChild(generateDeleteProjectButton());
+    controlButtonsRight.appendChild(createTodoToggleCompletedButton());
+    controlButtonsRight.appendChild(createDeleteProjectButton());
 
     let todosTableContainer = Element('div', ['todosTableContainer']);
     todosContainer.appendChild(todosTableContainer);
 
-    todosTableContainer.appendChild(generateEmptyTodoTable());
+    todosTableContainer.appendChild(createTodoTable());
 }
 
 export function displayTodos(projectId = '') {
@@ -37,7 +37,7 @@ export function displayTodos(projectId = '') {
     todoTableBody.innerHTML = '';
 
     todos.forEach(todo => {
-        todoTableBody.appendChild(generateTodoTableEntry(todo));
+        todoTableBody.appendChild(createTodoRow(todo));
     });
 
     let deleteProjectButton = document.getElementById('deleteProject');
@@ -59,12 +59,12 @@ function getTodosToDisplay(projectId) {
         todos = getTodosByProject(projectId);
     }
     if (!showCompleted) {
-        return todos.filter(todos => todos.isComplete === showCompleted);
+        return todos.filter(todo => todo.isComplete === showCompleted);
     }
     else return todos;
 }
 
-function generateEmptyTodoTable() {
+function createTodoTable() {
     let table = Element('table', ['todoTable']);
 
     let tableHead = Element('thead', ['todoTableHeader']);
@@ -82,7 +82,7 @@ function generateEmptyTodoTable() {
     return table;
 }
 
-function generateTodoTableEntry(todo) {
+function createTodoRow(todo) {
     let isCompleteCheckbox = Element('input', ['todoIsComplete'], todo.id);
     isCompleteCheckbox.type = 'checkbox';
     isCompleteCheckbox.checked = todo.isComplete;
@@ -137,7 +137,7 @@ function generateTodoTableEntry(todo) {
     return tableRow;
 }
 
-function generateToggleCompletedButton() {
+function createTodoToggleCompletedButton() {
     let button = Element('button',['toggleCompleted'], 'toggleCompleted');
     button.innerHTML = showCompleted ? 'Hide Completed' : 'Show Completed';
     button.addEventListener('click', () => {
@@ -148,7 +148,7 @@ function generateToggleCompletedButton() {
     return button;
 }
 
-function generateDeleteProjectButton() {
+function createDeleteProjectButton() {
     let button = Element('button',['deleteProject'], 'deleteProject');
     button.innerHTML = 'Delete Project';
     button.addEventListener('click', () => {
@@ -162,7 +162,7 @@ function generateDeleteProjectButton() {
     return button;
 }
 
-function generateAddTodoButton() {
+function createAddTodoButton() {
     let button = Element('button',['addTodo'], 'addTodo');
     button.innerHTML = 'Add Todo';
     button.addEventListener('click', () => {
