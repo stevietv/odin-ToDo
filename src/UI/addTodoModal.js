@@ -1,9 +1,9 @@
 ﻿import { Element } from '../helpers/helpers';
 import { format } from 'date-fns';
-import { addTodo } from '../models/storage';
+import { addTodo, editTodo } from '../models/storage';
 import { displayTodos } from '../UI/displayTodos';
 
-export function generateTodoForm(project) {
+export function generateTodoForm(project, todo = null) {
     let form = Element('form', ['todoForm'], 'todoForm');
 
     let projectInput = Element('input', [], 'project');
@@ -16,18 +16,28 @@ export function generateTodoForm(project) {
     titleInput.name = 'title';
     titleInput.placeholder = 'New Title';
     titleInput.required = true;
+    if (todo !== null) {
+        titleInput.value = todo.title;
+    }
     form.append(titleInput);
 
     let descriptionInput = Element('input', ['newDescription'], 'newDescription');
     descriptionInput.name = 'description';
     descriptionInput.placeholder = 'Description';
     descriptionInput.required = true;
+    if (todo !== null) {
+        descriptionInput.value = todo.description;
+    }
     form.append(descriptionInput);
 
     let dateInput = Element('input', ['newDate'], 'newDate');
     dateInput.name = 'dueDate';
     dateInput.type = 'date';
-    dateInput.value = format(new Date(),'yyyy-MM-dd');
+    if (todo !== null) {
+        dateInput.value = format(todo.dueDate, 'yyyy-MM-dd');
+    }
+    else
+        dateInput.value = format(new Date(),'yyyy-MM-dd');
     dateInput.required = true;
     form.append(dateInput);
 
@@ -40,16 +50,21 @@ export function generateTodoForm(project) {
         option.textContent = priority;
         priorityInput.append(option);
     });
+    if (todo !== null) {
+        priorityInput.value = todo.priority;
+    }
     form.append(priorityInput);
 
-    let submitButton = Element('button', ['Submit'], 'submitNewTodo', 'Submit');
+    let submitButtonText = todo ? 'Edit' : 'Add';
+
+    let submitButton = Element('button', ['Submit'], 'submitNewTodo', submitButtonText);
 
     form.append(submitButton);
 
     return form;
 }
 
-export function generateAddTodoModal(project) {
+export function generateAddTodoModal(project, todo = null) {
     let dialog = Element('dialog', ['addTodoModal'], 'addTodoModal');
 
     let closeIcon = Element('div', ['closeIcon'], '', 'X');
@@ -58,7 +73,9 @@ export function generateAddTodoModal(project) {
     })
     dialog.appendChild(closeIcon);
 
-    let form  = generateTodoForm(project);
+    let form  = generateTodoForm(project, todo);
+
+    console.log(todo);
 
 
     form.addEventListener('submit', (event) => {
@@ -69,8 +86,21 @@ export function generateAddTodoModal(project) {
         let description = formData.get('description');
         let dueDate = formData.get('dueDate');
         let priority = formData.get('priority');
+        let project = formData.get('project');
 
-        if (addTodo(title,  description, dueDate, priority, project)) {
+        if (!todo && addTodo(title,  description, dueDate, priority, project)) {
+            dialog.close();
+            displayTodos(project);
+        }
+
+        if (todo) {
+            todo.title = title;
+            todo.description = description;
+            todo.dueDate = dueDate;
+            todo.priority = priority;
+        }
+
+        if (todo && editTodo(todo)) {
             dialog.close();
             displayTodos(project);
         }

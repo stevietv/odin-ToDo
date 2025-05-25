@@ -73,6 +73,18 @@ export function addTodo(title, description, dueDate, priority, projectId) {
     }
 }
 
+export function editTodo(todo) {
+    console.log(`editing todo with id ${todo.id}`)
+    let index = todos.findIndex(t => t.id === todo.id)
+    if (index >= 0) {
+        todos.splice(index, 1, todo);
+        todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+        saveToLocalStorage();
+        return true;
+    }
+   return false;
+}
+
 export function deleteTodo(todoId) {
     todos = todos.filter(todo => todo.id !== todoId)
     saveToLocalStorage();

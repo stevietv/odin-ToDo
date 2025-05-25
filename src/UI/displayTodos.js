@@ -108,6 +108,16 @@ function generateTodoTableEntry(todo) {
 
     let editButton = Element('div', ['todoItemEdit', 'center'], '', 'E');
 
+    editButton.addEventListener('click', () => {
+        let oldDialog = document.getElementById('addTodoModal');
+        let dialog = generateAddTodoModal(currentProject, todo);
+        if (oldDialog) {
+            document.body.replaceChild(dialog, oldDialog);
+        }
+        else document.body.appendChild(dialog);
+        dialog.showModal()
+    })
+
     actionsCell.appendChild(editButton);
     actionsCell.appendChild(deleteButton);
 
