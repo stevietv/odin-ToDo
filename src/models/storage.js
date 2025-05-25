@@ -65,9 +65,11 @@ export function addTodo(title, description, dueDate, priority, projectId) {
         todos.push(createTodo(title, description, dueDate, priority, projectId));
         todos.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
         saveToLocalStorage();
+        return true;
     }
     else {
         console.log("Project does not exist to add todo to");
+        return false;
     }
 }
 

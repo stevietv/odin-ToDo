@@ -22,7 +22,12 @@
   margin: 10px;
 }
 
-.controlButtonsContainer {
+.controlButtonsLeft{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.controlButtonsRight {
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-start;
@@ -48,4 +53,20 @@
 }
 .overdue {
   color: red;
+}
+
+input:user-invalid {
+  border: 1px solid red;
+}
+
+.closeIcon {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.todoForm {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
 }

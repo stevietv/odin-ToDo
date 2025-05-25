@@ -1,7 +1,8 @@
 import { getTodos, getTodosByProject, deleteTodo, addTodo, toggleTodoComplete, deleteProject, getProjectById } from "../models/storage";
 import { Element } from "../helpers/helpers";
-import { format, isPast } from "date-fns";
+import { add, format, isPast } from "date-fns";
 import { displayProjects } from './displayProjects';
+import { generateAddTodoModal } from './addTodoModal';
 
 let currentProject = '';
 let showCompleted = false;
@@ -13,8 +14,15 @@ export function generateBaseTodosLayout() {
     let controlButtonsContainer = Element('div', ['controlButtonsContainer']);
     todosContainer.appendChild(controlButtonsContainer);
 
-    controlButtonsContainer.appendChild(generateToggleCompletedButton());
-    controlButtonsContainer.appendChild(generateDeleteProjectButton());
+    let controlButtonsLeft = Element('div', ['controlButtonsLeft']);
+    let controlButtonsRight = Element('div', ['controlButtonsRight']);
+    controlButtonsContainer.appendChild(controlButtonsLeft);
+    controlButtonsContainer.appendChild(controlButtonsRight);
+
+    controlButtonsContainer.appendChild(generateAddTodoButton());
+
+    controlButtonsRight.appendChild(generateToggleCompletedButton());
+    controlButtonsRight.appendChild(generateDeleteProjectButton());
 
     let todosTableContainer = Element('div', ['todosTableContainer']);
     todosContainer.appendChild(todosTableContainer);
@@ -32,17 +40,11 @@ export function displayTodos(projectId = '') {
         todoTableBody.appendChild(generateTodoTableEntry(todo));
     });
 
-    let todoTableFoot = document.getElementById('todoTableFooter');
-    todoTableFoot.innerHTML = '';
-
-    if (projectId !== '') {
-        todoTableFoot.appendChild(generateNewTodoRow());
-        addNewTodoListener();
-    }
-
     let deleteProjectButton = document.getElementById('deleteProject');
+    let addNewTodoButton = document.getElementById('addTodo');
 
     deleteProjectButton.disabled = (projectId === '');
+    addNewTodoButton.disabled = (projectId === '');
 
 }
 
@@ -77,7 +79,6 @@ function generateEmptyTodoTable() {
     table.appendChild(tableHead);
         
     table.appendChild(Element('tbody', ['todoTableBody'], 'todoTableBody'));
-    table.appendChild(Element('tfoot', ['todoTableFooter'], 'todoTableFooter'));
     return table;
 }
 
@@ -119,49 +120,9 @@ function generateTodoTableEntry(todo) {
     tableRow.appendChild(isCompleteField);
     tableRow.appendChild(actionsCell);
 
-    if (!todo.isComplete && isPast(todo.dueDate)) {
+    if (!todo.isComplete && isPast(add(todo.dueDate, { days: 1 }))) {
         tableRow.classList.add('overdue');
     }
-
-    return tableRow;
-}
-
-function generateNewTodoRow() {
-    let titleField = Element('td',['newTodoItem']);
-    let titleInput = Element('input', ['newTitle'], 'newTitle');
-    titleInput.placeholder = 'New Title';
-    titleField.append(titleInput);
-
-    let descriptionField = Element('td', ['newTodoItem']);
-    let descriptionInput = Element('input', ['newDescription'], 'newDescription');
-    descriptionInput.placeholder = 'Description';
-    descriptionField.append(descriptionInput);
-
-    let dateField = Element('td', ['newDate', 'center']);
-    let dateInput = Element('input', ['newDate'], 'newDate');
-    dateInput.type = 'date';
-    dateInput.value = format(new Date(),'yyyy-MM-dd');
-    dateField.append(dateInput);
-
-    let priorityField = Element('td', ['newPriority', 'center']);
-    let priorityInput = Element('select', ['newPriority'], 'newPriority');
-    let priorityOptions = ['Low', 'Medium', 'High'];
-    priorityOptions.forEach(priority => {
-        let option = document.createElement('option');
-        option.value = priority;
-        option.textContent = priority;
-        priorityInput.append(option);
-    });
-    priorityField.append(priorityInput);
-
-    let tableRow = Element('tr');
-    
-    tableRow.appendChild(titleField);
-    tableRow.appendChild(descriptionField);
-    tableRow.appendChild(dateField);
-    tableRow.appendChild(priorityField);
-    tableRow.appendChild(Element('td', ['newTodoItem', 'center'], '', ''));
-    tableRow.appendChild(Element('td', ['newTodoItem', 'todoItemAdd', 'center'], '', '+'));
 
     return tableRow;
 }
@@ -191,22 +152,18 @@ function generateDeleteProjectButton() {
     return button;
 }
 
-
-function addNewTodoListener() {
-    let addButton = document.querySelector('td.todoItemAdd');
-
-    addButton.addEventListener('click', () => {
-        let title = document.getElementById('newTitle').value;
-        let description = document.getElementById('newDescription').value;
-        let date = document.getElementById('newDate').value;
-        if (date !== null && date !== '') {
-            date = new Date(date);
+function generateAddTodoButton() {
+    let button = Element('button',['addTodo'], 'addTodo');
+    button.innerHTML = 'Add Todo';
+    button.addEventListener('click', () => {
+        let oldDialog = document.getElementById('addTodoModal');
+        let dialog = generateAddTodoModal(currentProject);
+        if (oldDialog) {
+            document.body.replaceChild(dialog, oldDialog);
         }
-        let priority = document.getElementById('newPriority').value;
-
-        if (title !== '' && date !== '') {
-            addTodo(title, description, date, priority, currentProject);
-            displayTodos(currentProject);
-        }
+        else document.body.appendChild(dialog);
+        dialog.showModal()
     })
+
+    return button;
 }
