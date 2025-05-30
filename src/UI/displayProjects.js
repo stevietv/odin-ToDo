@@ -7,7 +7,7 @@ export function displayProjects() {
     let projectsContainer = document.getElementById("projects");
     projectsContainer.innerHTML = "";
 
-    projectsContainer.appendChild(Element('div', ['projectItem', 'projectItemAll'], '', 'All Projects'));
+    projectsContainer.appendChild(Element('div', ['projectItem', 'projectItemAll', 'activeProject'], '', 'All Projects'));
     projectsContainer.appendChild(Element('hr'));
 
     allProjects.forEach(project => {
@@ -26,6 +26,8 @@ function addProjectListeners() {
 
     projects.forEach(project => {
         project.addEventListener('click', () => {
+            clearActiveProject();
+            project.classList.toggle('activeProject');
             displayTodos(project.id);
         })
     })
@@ -40,6 +42,15 @@ function addNewProjectListener() {
         if (newProject !== null) {
             addProject(newProject);
             displayProjects();
+        }
+    })
+}
+
+function clearActiveProject() {
+    const projects = document.querySelectorAll('div.projectItem');
+    projects.forEach(project => {
+        if (project.classList.contains('activeProject')) {
+            project.classList.remove('activeProject');
         }
     })
 }

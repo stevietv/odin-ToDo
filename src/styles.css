@@ -70,3 +70,7 @@ input:user-invalid {
   flex-direction: column;
   row-gap: 10px;
 }
+
+.activeProject {
+  font-weight: bold;
+}
