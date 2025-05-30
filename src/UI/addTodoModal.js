@@ -1,7 +1,7 @@
 ﻿import { Element } from '../helpers/helpers';
 import { format } from 'date-fns';
 import { addTodo, editTodo } from '../models/storage';
-import { displayTodos } from '../UI/displayTodos';
+import { displayTodos } from './displayTodos';
 
 export function generateTodoForm(project, todo = null) {
     let form = Element('form', ['todoForm'], 'todoForm');
@@ -67,11 +67,18 @@ export function generateTodoForm(project, todo = null) {
 export function generateAddTodoModal(project, todo = null) {
     let dialog = Element('dialog', ['addTodoModal'], 'addTodoModal');
 
+    let headerContainer = Element('div', ['addTodoHeaderContainer']);
+
+    let header = Element('div', ['addTodoHeader'], 'addTodoHeader', todo ? 'Edit Todo' : 'Add Todo');
+    headerContainer.append(header);
+
     let closeIcon = Element('div', ['closeIcon'], '', 'X');
     closeIcon.addEventListener('click', () => {
         dialog.close();
     })
-    dialog.appendChild(closeIcon);
+    headerContainer.appendChild(closeIcon);
+
+    dialog.append(headerContainer);
 
     let form  = generateTodoForm(project, todo);
 

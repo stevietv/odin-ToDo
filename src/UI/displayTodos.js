@@ -3,6 +3,7 @@ import { Element } from "../helpers/helpers";
 import { add, format, isPast } from "date-fns";
 import { displayProjects } from './displayProjects';
 import { generateAddTodoModal } from './addTodoModal';
+import EditIcon from '../assets/images/edit.svg'
 
 let currentProject = '';
 let showCompleted = false;
@@ -19,7 +20,7 @@ export function createBaseTodosLayout() {
     controlButtonsContainer.appendChild(controlButtonsLeft);
     controlButtonsContainer.appendChild(controlButtonsRight);
 
-    controlButtonsContainer.appendChild(createAddTodoButton());
+    controlButtonsLeft.appendChild(createAddTodoButton());
 
     controlButtonsRight.appendChild(createTodoToggleCompletedButton());
     controlButtonsRight.appendChild(createDeleteProjectButton());
@@ -83,6 +84,9 @@ function createTodoTable() {
 }
 
 function createTodoRow(todo) {
+    let editButton = Element('div', ['center', 'todoEditButton']);
+    editButton.innerHTML = EditIcon;
+
     let isCompleteCheckbox = Element('input', ['todoIsComplete'], todo.id);
     isCompleteCheckbox.type = 'checkbox';
     isCompleteCheckbox.checked = todo.isComplete;
@@ -105,8 +109,6 @@ function createTodoRow(todo) {
             displayTodos(currentProject);
         }
     })
-
-    let editButton = Element('div', ['todoItemEdit', 'center'], '', 'E');
 
     editButton.addEventListener('click', () => {
         let oldDialog = document.getElementById('addTodoModal');

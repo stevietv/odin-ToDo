@@ -1,9 +1,70 @@
+/* definitions */
+
+:root {
+  --backgroundColour: #142d4c;
+  --accentColour: #385170;
+  --highlightColour: #9fd3c7;
+  --mainColour: #ececec;
+  --warningColour: #df6868;
+}
+
+@font-face {
+  font-family: 'permanent_markerregular';
+  src: url('./assets/fonts/permanentmarker-regular-webfont.woff2') format('woff2'),
+       url('./assets/fonts/permanentmarker-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter-Regular.woff2') format('woff2'),
+  url('./assets/fonts/Inter-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter-Italic.woff2') format('woff2'),
+  url('./assets/fonts/Inter-Italic.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+body {
+  background-color: var(--backgroundColour);
+  color: var(--mainColour);
+  font-family: 'Inter', sans-serif;
+}
+
+.header {
+  font-family: 'permanent_markerregular', cursive;
+  font-size: 3em;
+}
+
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.overdue {
+  color: var(--warningColour);
+}
+
+/* main grid layout */
+
 .mainContainer {
   display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: 100px 1fr;
-  grid-column-gap: 0;
-  grid-row-gap: 0;
+  grid-template-columns: 1fr 6fr;
+  grid-template-rows: 1fr auto;
+  grid-column-gap: 15px;
+  grid-row-gap: 10px;
   margin: 0 5em;
 }
 
@@ -15,11 +76,27 @@
 .projects {
   grid-area: 2 / 1 / 3 / 2;
   margin: 10px;
+  padding-top: 2.5em;
 }
 
 .items {
   grid-area: 2 / 2 / 3 / 3;
   margin: 10px;
+}
+
+/* project column styling */
+
+.activeProject {
+  font-weight: bold;
+}
+
+/* Control Buttons */
+
+.controlButtonsContainer{
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto;
+  margin-bottom: 10px;
 }
 
 .controlButtonsLeft{
@@ -33,6 +110,42 @@
   justify-content: flex-start;
 }
 
+button.addTodo, button.toggleCompleted {
+  background-color:var(--highlightColour);
+  color: var(--accentColour);
+  border:1px solid var(--accentColour);
+  border-radius:4px;
+  display:inline-block;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:bold;
+  padding:6px 12px;
+  text-decoration:none;
+}
+
+button.addTodo:disabled {
+  visibility: hidden;
+}
+
+button.deleteProject {
+  background-color:var(--warningColour);
+  color: var(--accentColour);
+  border:1px solid var(--accentColour);
+  border-radius:4px;
+  display:inline-block;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:bold;
+  padding:6px 12px;
+  text-decoration:none;
+}
+
+button:disabled {
+  visibility: hidden;
+}
+
+/* Todo Table */
+
 .todoTable {
   width: 100%;
   height: 100%;
@@ -44,24 +157,18 @@
   gap: 1em;
 }
 
-.center {
-  text-align: center;
+.todoEditButton {
+  height: 1em;
+  width: 1em;
+  vertical-align: middle;
 }
 
-.left {
-  text-align: left;
-}
-.overdue {
-  color: red;
-}
+/*  Add-Edit Todo Form */
 
-input:user-invalid {
-  border: 1px solid red;
-}
-
-.closeIcon {
-  display: flex;
-  justify-content: flex-end;
+.addTodoModal {
+  background-color: var(--accentColour);
+  color: var(--mainColour);
+  border: 1px solid var(--highlightColour);
 }
 
 .todoForm {
@@ -71,6 +178,41 @@ input:user-invalid {
   row-gap: 10px;
 }
 
-.activeProject {
+.todoForm button {
+  background-color:var(--highlightColour);
+  color: var(--accentColour);
+  border:1px solid var(--accentColour);
+  border-radius:4px;
+  display:inline-block;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:bold;
+  padding:6px 12px;
+  text-decoration:none;
+}
+
+.addTodoHeaderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  padding: 10px;
+}
+
+.addTodoHeader {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   font-weight: bold;
+}
+
+.closeIcon {
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--warningColour);
+  font-weight: bold;
+}
+
+input:user-invalid {
+  border: 1px solid var(--warningColour);;
 }
