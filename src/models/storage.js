@@ -2,8 +2,8 @@ import { createProject, Project } from "./project";
 import { createTodo, Todo } from "./todo";
 
 let projects = [];
-loadProjects();
 let todos = [];
+loadProjects();
 loadTodos();
 
 
