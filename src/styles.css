@@ -10,16 +10,18 @@
 
 @font-face {
   font-family: 'permanent_markerregular';
-  src: url('./assets/fonts/permanentmarker-regular-webfont.woff2') format('woff2'),
-       url('./assets/fonts/permanentmarker-regular-webfont.woff') format('woff');
+  src:
+    url('./assets/fonts/permanentmarker-regular-webfont.woff2') format('woff2'),
+    url('./assets/fonts/permanentmarker-regular-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Inter';
-  src: url('./assets/fonts/Inter-Regular.woff2') format('woff2'),
-  url('./assets/fonts/Inter-Regular.woff') format('woff');
+  src:
+    url('./assets/fonts/Inter-Regular.woff2') format('woff2'),
+    url('./assets/fonts/Inter-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -27,8 +29,9 @@
 
 @font-face {
   font-family: 'Inter';
-  src: url('./assets/fonts/Inter-Italic.woff2') format('woff2'),
-  url('./assets/fonts/Inter-Italic.woff') format('woff');
+  src:
+    url('./assets/fonts/Inter-Italic.woff2') format('woff2'),
+    url('./assets/fonts/Inter-Italic.woff') format('woff');
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -92,14 +95,14 @@ body {
 
 /* Control Buttons */
 
-.controlButtonsContainer{
+.controlButtonsContainer {
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: auto;
   margin-bottom: 10px;
 }
 
-.controlButtonsLeft{
+.controlButtonsLeft {
   display: flex;
   justify-content: flex-start;
 }
@@ -110,17 +113,18 @@ body {
   justify-content: flex-start;
 }
 
-button.addTodo, button.toggleCompleted {
-  background-color:var(--highlightColour);
+button.addTodo,
+button.toggleCompleted {
+  background-color: var(--highlightColour);
   color: var(--accentColour);
-  border:1px solid var(--accentColour);
-  border-radius:4px;
-  display:inline-block;
-  cursor:pointer;
-  font-size:13px;
-  font-weight:bold;
-  padding:6px 12px;
-  text-decoration:none;
+  border: 1px solid var(--accentColour);
+  border-radius: 4px;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 6px 12px;
+  text-decoration: none;
 }
 
 button.addTodo:disabled {
@@ -128,16 +132,16 @@ button.addTodo:disabled {
 }
 
 button.deleteProject {
-  background-color:var(--warningColour);
+  background-color: var(--warningColour);
   color: var(--accentColour);
-  border:1px solid var(--accentColour);
-  border-radius:4px;
-  display:inline-block;
-  cursor:pointer;
-  font-size:13px;
-  font-weight:bold;
-  padding:6px 12px;
-  text-decoration:none;
+  border: 1px solid var(--accentColour);
+  border-radius: 4px;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 6px 12px;
+  text-decoration: none;
 }
 
 button:disabled {
@@ -179,16 +183,16 @@ button:disabled {
 }
 
 .todoForm button {
-  background-color:var(--highlightColour);
+  background-color: var(--highlightColour);
   color: var(--accentColour);
-  border:1px solid var(--accentColour);
-  border-radius:4px;
-  display:inline-block;
-  cursor:pointer;
-  font-size:13px;
-  font-weight:bold;
-  padding:6px 12px;
-  text-decoration:none;
+  border: 1px solid var(--accentColour);
+  border-radius: 4px;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 6px 12px;
+  text-decoration: none;
 }
 
 .addTodoHeaderContainer {
@@ -214,5 +218,5 @@ button:disabled {
 }
 
 input:user-invalid {
-  border: 1px solid var(--warningColour);;
+  border: 1px solid var(--warningColour);
 }

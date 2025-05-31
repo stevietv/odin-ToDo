@@ -1,181 +1,207 @@
-import { getTodos, getTodosByProject, deleteTodo, addTodo, toggleTodoComplete, deleteProject, getProjectById } from "../models/storage";
-import { Element } from "../helpers/helpers";
-import { add, format, isPast } from "date-fns";
+import {
+  getTodos,
+  getTodosByProject,
+  deleteTodo,
+  toggleTodoComplete,
+  deleteProject,
+  getProjectById,
+} from '../models/storage';
+import { Element } from '../helpers/helpers';
+import { add, format, isPast } from 'date-fns';
 import { displayProjects } from './displayProjects';
 import { generateAddTodoModal } from './addTodoModal';
-import EditIcon from '../assets/images/edit.svg'
+import EditIcon from '../assets/images/edit.svg';
 
 let currentProject = '';
 let showCompleted = false;
 
 export function createBaseTodosLayout() {
-    let todosContainer = document.getElementById('items');
-    todosContainer.innerHTML = '';
+  let todosContainer = document.getElementById('items');
+  todosContainer.innerHTML = '';
 
-    let controlButtonsContainer = Element('div', ['controlButtonsContainer']);
-    todosContainer.appendChild(controlButtonsContainer);
+  let controlButtonsContainer = Element('div', ['controlButtonsContainer']);
+  todosContainer.appendChild(controlButtonsContainer);
 
-    let controlButtonsLeft = Element('div', ['controlButtonsLeft']);
-    let controlButtonsRight = Element('div', ['controlButtonsRight']);
-    controlButtonsContainer.appendChild(controlButtonsLeft);
-    controlButtonsContainer.appendChild(controlButtonsRight);
+  let controlButtonsLeft = Element('div', ['controlButtonsLeft']);
+  let controlButtonsRight = Element('div', ['controlButtonsRight']);
+  controlButtonsContainer.appendChild(controlButtonsLeft);
+  controlButtonsContainer.appendChild(controlButtonsRight);
 
-    controlButtonsLeft.appendChild(createAddTodoButton());
+  controlButtonsLeft.appendChild(createAddTodoButton());
 
-    controlButtonsRight.appendChild(createTodoToggleCompletedButton());
-    controlButtonsRight.appendChild(createDeleteProjectButton());
+  controlButtonsRight.appendChild(createTodoToggleCompletedButton());
+  controlButtonsRight.appendChild(createDeleteProjectButton());
 
-    let todosTableContainer = Element('div', ['todosTableContainer']);
-    todosContainer.appendChild(todosTableContainer);
+  let todosTableContainer = Element('div', ['todosTableContainer']);
+  todosContainer.appendChild(todosTableContainer);
 
-    todosTableContainer.appendChild(createTodoTable());
+  todosTableContainer.appendChild(createTodoTable());
 }
 
 export function displayTodos(projectId = '') {
-    let todos = getTodosToDisplay(projectId);
+  let todos = getTodosToDisplay(projectId);
 
-    let todoTableBody = document.getElementById('todoTableBody');
-    todoTableBody.innerHTML = '';
+  let todoTableBody = document.getElementById('todoTableBody');
+  todoTableBody.innerHTML = '';
 
-    todos.forEach(todo => {
-        todoTableBody.appendChild(createTodoRow(todo));
-    });
+  todos.forEach((todo) => {
+    todoTableBody.appendChild(createTodoRow(todo));
+  });
 
-    let deleteProjectButton = document.getElementById('deleteProject');
-    let addNewTodoButton = document.getElementById('addTodo');
+  let deleteProjectButton = document.getElementById('deleteProject');
+  let addNewTodoButton = document.getElementById('addTodo');
 
-    deleteProjectButton.disabled = (projectId === '');
-    addNewTodoButton.disabled = (projectId === '');
-
+  deleteProjectButton.disabled = projectId === '';
+  addNewTodoButton.disabled = projectId === '';
 }
 
 function getTodosToDisplay(projectId) {
-    let todos;
-    if (projectId === '') {
-        currentProject = '';
-        todos = getTodos();
-    }
-    else {
-        currentProject = projectId;
-        todos = getTodosByProject(projectId);
-    }
-    if (!showCompleted) {
-        return todos.filter(todo => todo.isComplete === showCompleted);
-    }
-    else return todos;
+  let todos;
+  if (projectId === '') {
+    currentProject = '';
+    todos = getTodos();
+  } else {
+    currentProject = projectId;
+    todos = getTodosByProject(projectId);
+  }
+  if (!showCompleted) {
+    return todos.filter((todo) => todo.isComplete === showCompleted);
+  } else return todos;
 }
 
 function createTodoTable() {
-    let table = Element('table', ['todoTable']);
+  let table = Element('table', ['todoTable']);
 
-    let tableHead = Element('thead', ['todoTableHeader']);
-    let tableRow = Element('tr');
+  let tableHead = Element('thead', ['todoTableHeader']);
+  let tableRow = Element('tr');
 
-    let columns = ['Title', 'Description', 'Due Date', 'Priority', 'Complete', 'Actions'];
-    columns.forEach(column => {
-        tableRow.appendChild(Element('th', (column !== 'Title' && column !== 'Description') ? ['todoTableHeaderItem', 'center'] : ['todoTableHeaderItem', 'left'], `th-${column}`, column));
-    });
+  let columns = [
+    'Title',
+    'Description',
+    'Due Date',
+    'Priority',
+    'Complete',
+    'Actions',
+  ];
+  columns.forEach((column) => {
+    tableRow.appendChild(
+      Element(
+        'th',
+        column !== 'Title' && column !== 'Description'
+          ? ['todoTableHeaderItem', 'center']
+          : ['todoTableHeaderItem', 'left'],
+        `th-${column}`,
+        column,
+      ),
+    );
+  });
 
-    tableHead.appendChild(tableRow);
-    table.appendChild(tableHead);
-        
-    table.appendChild(Element('tbody', ['todoTableBody'], 'todoTableBody'));
-    return table;
+  tableHead.appendChild(tableRow);
+  table.appendChild(tableHead);
+
+  table.appendChild(Element('tbody', ['todoTableBody'], 'todoTableBody'));
+  return table;
 }
 
 function createTodoRow(todo) {
-    let editButton = Element('div', ['center', 'todoEditButton']);
-    editButton.innerHTML = EditIcon;
+  let editButton = Element('div', ['center', 'todoEditButton']);
+  editButton.innerHTML = EditIcon;
 
-    let isCompleteCheckbox = Element('input', ['todoIsComplete'], todo.id);
-    isCompleteCheckbox.type = 'checkbox';
-    isCompleteCheckbox.checked = todo.isComplete;
+  let isCompleteCheckbox = Element('input', ['todoIsComplete'], todo.id);
+  isCompleteCheckbox.type = 'checkbox';
+  isCompleteCheckbox.checked = todo.isComplete;
 
-    let isCompleteField = Element('td', ['todoItem', 'center']);
-    isCompleteField.appendChild(isCompleteCheckbox);
+  let isCompleteField = Element('td', ['todoItem', 'center']);
+  isCompleteField.appendChild(isCompleteCheckbox);
 
-    isCompleteCheckbox.addEventListener('change', () => {
-        toggleTodoComplete(todo);
-        displayTodos(currentProject);
-    })
+  isCompleteCheckbox.addEventListener('change', () => {
+    toggleTodoComplete(todo);
+    displayTodos(currentProject);
+  });
 
-    let actionsCell = Element('td', ['todoItem', 'todoItemActions', 'center']);
+  let actionsCell = Element('td', ['todoItem', 'todoItemActions', 'center']);
 
-    let deleteButton = Element('div', ['todoItemDelete', 'center'], '', 'X')
+  let deleteButton = Element('div', ['todoItemDelete', 'center'], '', 'X');
 
-    deleteButton.addEventListener('click', () => {
-        if (confirm(`Do you want to delete ${todo.title}`)) {
-            deleteTodo(todo.id);
-            displayTodos(currentProject);
-        }
-    })
-
-    editButton.addEventListener('click', () => {
-        let oldDialog = document.getElementById('addTodoModal');
-        let dialog = generateAddTodoModal(currentProject, todo);
-        if (oldDialog) {
-            document.body.replaceChild(dialog, oldDialog);
-        }
-        else document.body.appendChild(dialog);
-        dialog.showModal()
-    })
-
-    actionsCell.appendChild(editButton);
-    actionsCell.appendChild(deleteButton);
-
-    let tableRow = Element('tr');
-    
-    tableRow.appendChild(Element('td', ['todoItem'], '', todo.title));
-    tableRow.appendChild(Element('td', ['todoItem'], '', todo.description));
-    tableRow.appendChild(Element('td', ['todoItem', 'center'], '', format(todo.dueDate, 'PP')));
-    tableRow.appendChild(Element('td', ['todoItem', 'center'], '', todo.priority));
-    tableRow.appendChild(isCompleteField);
-    tableRow.appendChild(actionsCell);
-
-    if (!todo.isComplete && isPast(add(todo.dueDate, { days: 1 }))) {
-        tableRow.classList.add('overdue');
+  deleteButton.addEventListener('click', () => {
+    if (confirm(`Do you want to delete ${todo.title}`)) {
+      deleteTodo(todo.id);
+      displayTodos(currentProject);
     }
+  });
 
-    return tableRow;
+  editButton.addEventListener('click', () => {
+    let oldDialog = document.getElementById('addTodoModal');
+    let dialog = generateAddTodoModal(currentProject, todo);
+    if (oldDialog) {
+      document.body.replaceChild(dialog, oldDialog);
+    } else document.body.appendChild(dialog);
+    dialog.showModal();
+  });
+
+  actionsCell.appendChild(editButton);
+  actionsCell.appendChild(deleteButton);
+
+  let tableRow = Element('tr');
+
+  tableRow.appendChild(Element('td', ['todoItem'], '', todo.title));
+  tableRow.appendChild(Element('td', ['todoItem'], '', todo.description));
+  tableRow.appendChild(
+    Element('td', ['todoItem', 'center'], '', format(todo.dueDate, 'PP')),
+  );
+  tableRow.appendChild(
+    Element('td', ['todoItem', 'center'], '', todo.priority),
+  );
+  tableRow.appendChild(isCompleteField);
+  tableRow.appendChild(actionsCell);
+
+  if (!todo.isComplete && isPast(add(todo.dueDate, { days: 1 }))) {
+    tableRow.classList.add('overdue');
+  }
+
+  return tableRow;
 }
 
 function createTodoToggleCompletedButton() {
-    let button = Element('button',['toggleCompleted'], 'toggleCompleted');
+  let button = Element('button', ['toggleCompleted'], 'toggleCompleted');
+  button.innerHTML = showCompleted ? 'Hide Completed' : 'Show Completed';
+  button.addEventListener('click', () => {
+    showCompleted = !showCompleted;
     button.innerHTML = showCompleted ? 'Hide Completed' : 'Show Completed';
-    button.addEventListener('click', () => {
-        showCompleted = !showCompleted;
-        button.innerHTML = showCompleted ? 'Hide Completed' : 'Show Completed';
-        displayTodos(currentProject);
-    })
-    return button;
+    displayTodos(currentProject);
+  });
+  return button;
 }
 
 function createDeleteProjectButton() {
-    let button = Element('button',['deleteProject'], 'deleteProject');
-    button.innerHTML = 'Delete Project';
-    button.addEventListener('click', () => {
-        let projectTitle = getProjectById(currentProject).title;
-        if (confirm(`Do you want to delete the project '${projectTitle}' and all associated todos?`)) {
-            deleteProject(currentProject);
-            displayTodos();
-            displayProjects();
-        }
-    })
-    return button;
+  let button = Element('button', ['deleteProject'], 'deleteProject');
+  button.innerHTML = 'Delete Project';
+  button.addEventListener('click', () => {
+    let projectTitle = getProjectById(currentProject).title;
+    if (
+      confirm(
+        `Do you want to delete the project '${projectTitle}' and all associated todos?`,
+      )
+    ) {
+      deleteProject(currentProject);
+      displayTodos();
+      displayProjects();
+    }
+  });
+  return button;
 }
 
 function createAddTodoButton() {
-    let button = Element('button',['addTodo'], 'addTodo');
-    button.innerHTML = 'Add Todo';
-    button.addEventListener('click', () => {
-        let oldDialog = document.getElementById('addTodoModal');
-        let dialog = generateAddTodoModal(currentProject);
-        if (oldDialog) {
-            document.body.replaceChild(dialog, oldDialog);
-        }
-        else document.body.appendChild(dialog);
-        dialog.showModal()
-    })
+  let button = Element('button', ['addTodo'], 'addTodo');
+  button.innerHTML = 'Add Todo';
+  button.addEventListener('click', () => {
+    let oldDialog = document.getElementById('addTodoModal');
+    let dialog = generateAddTodoModal(currentProject);
+    if (oldDialog) {
+      document.body.replaceChild(dialog, oldDialog);
+    } else document.body.appendChild(dialog);
+    dialog.showModal();
+  });
 
-    return button;
+  return button;
 }
